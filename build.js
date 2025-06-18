@@ -10,8 +10,8 @@ try {
   fs.mkdirSync(filesPath);
 } catch (err) {}
 
-for (let i = 0; i < 10000; i++) {
-//   if (i > 10) break;
+for (let i = 0; i < 100000; i++) {
+  //   if (i > 10) break;
   const fileName = `${i}.txt`;
   fs.writeFileSync(`${filesPath}/${fileName}`, `${i} | ${parseInt(Math.random() * 1e16, 10)}`);
   files.push(fileName);
@@ -19,7 +19,10 @@ for (let i = 0; i < 10000; i++) {
 
 indexData = indexData.replace(
   "{{links}}",
-  files.map((fileName) => `<a href="files/${fileName}">${fileName}</a>`).join("")
+  files
+    .filter((_, index) => index % 1000 === 0)
+    .map((fileName) => `<a href="files/${fileName}">${fileName}</a>`)
+    .join("<br>")
 );
 
 fs.writeFileSync("./public/index.html", indexData);

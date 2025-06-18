@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]  # or "master" if that's your default branch
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -22,10 +22,13 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Build Files
+        uses: npm run build
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public  # or the folder with your static site output
+          path: ./public
 
   deploy:
     needs: build

@@ -1,30 +1,37 @@
 const fs = require("fs");
-let indexData = fs.readFileSync("./src/index.html", "utf-8");
+require("dotenv").config();
 
-indexData = indexData.replace("{{time}}", new Date().toISOString());
+let indexHTML = fs
+  .readFileSync("./src/index.html", "utf-8")
+  .replaceAll("{{time}}", new Date().toISOString());
 
-const files = [];
+const isDevEnv = process.env?.BUILD_TYPE !== "prod";
 
+const filesNamesList = [];
 const filesPath = "./public/files";
-try {
-  fs.mkdirSync(filesPath);
-} catch (err) {}
+
+fs.mkdirSync(filesPath, { recursive: true });
+
+const randInt = () => parseInt(Math.random() * 1e16, 10);
 
 for (let i = 0; i < 1_000_000; i++) {
-  //   if (i > 10) break;
+  if (isDevEnv && i > 10) break;
   const fileName = `${i}.txt`;
-  fs.writeFileSync(`${filesPath}/${fileName}`, `${i} | ${parseInt(Math.random() * 1e16, 10)}`);
-  files.push(fileName);
+  fs.writeFileSync(
+    `${filesPath}/${fileName}`,
+    `${i} | ${randInt()} | ${randInt()} | ${randInt()} | ${randInt()}`
+  );
+  filesNamesList.push(fileName);
 }
 
-indexData = indexData.replace(
+indexHTML = indexHTML.replace(
   "{{links}}",
-  files
-    .filter((_, index) => index % 10000 === 0)
+  filesNamesList
+    .filter((_, index) => index % 5000 === 0 || index === filesNamesList.length - 1)
     .map((fileName) => `<a href="files/${fileName}">${fileName}</a>`)
     .join("<br>")
 );
 
-fs.writeFileSync("./public/index.html", indexData);
+fs.writeFileSync("./public/index.html", indexHTML);
 
 console.log("files built");

@@ -23,7 +23,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Install dependancies
-        uses: npm ci
+        run: npm ci
 
       - name: Build Files
         run: npm run build

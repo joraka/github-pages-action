@@ -14,7 +14,7 @@ fs.mkdirSync(filesPath, { recursive: true });
 
 const randInt = () => parseInt(Math.random() * 1e16, 10);
 
-for (let i = 0; i < 1_000_000; i++) {
+for (let i = 0; i < 1_00_000; i++) {
   if (isDevEnv && i > 10) break;
   const fileName = `${i}.txt`;
   fs.writeFileSync(

@@ -34,6 +34,12 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
+          name: my-artifact
+
+      - uses: geekyeggo/delete-artifact@v5
+        with:
+            name: my-artifact
+          
 
   deploy:
     needs: build
@@ -46,12 +52,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-  cleanup:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Delete artifact
-        uses: geekyeggo/delete-artifact@v5
-        with:
-          name: github-pages
